@@ -16,8 +16,7 @@ namespace GameFantasyAPI.Model
       
           public int Id { get; set; }
           public List<Campeonato> Campeonato { get; set; }
-           public List<Vencedor> Vencedores { get; set; }
-
+          public List<Vencedor> Vencedores { get; set; }
         
     }
 }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GameFantasyAPI.Data;
@@ -25,25 +24,33 @@ namespace GameFantasy.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PaginaTime>>> GetTimes()
         {
-            //paginação no get
-            int pagina = 1;
+            try
+            {
+                //paginação no get
+                int pagina = 1;
+                int tamanhoPagina = 10;
 
-            int tamanhoPagina = 10;
-            var QtdPaginas =(_context.Times.Count() / tamanhoPagina)+1;
+                var QtdPaginas = (_context.Times.Count() / tamanhoPagina) + 1;
 
-            var resultados = _context.Times
+                var resultados = _context.Times
                                .Skip((pagina - 1) * tamanhoPagina)
                                .Take(tamanhoPagina);
-            PaginaTime result = new PaginaTime { Pagina = pagina, TamanhoPagina = tamanhoPagina, QtdPagina = QtdPaginas, Itens = resultados.ToList() };
-            var pag = _context.PaginaTimes.Find(1);
-            if (pag == null)
-            {
+                //persistir os resultados da query na tabela paginaTimes
+                PaginaTime result = new PaginaTime { Pagina = pagina, TamanhoPagina = tamanhoPagina, QtdPagina = QtdPaginas, Itens = resultados.ToList() };
+                var pag = _context.PaginaTimes.Find(1);
+                if (pag == null)
+                {
                 await _context.PaginaTimes.AddAsync(result);
+                }
+                await _context.SaveChangesAsync();
+          
+                return _context.PaginaTimes.ToList();
             }
-            await _context.SaveChangesAsync();
-            return  _context.PaginaTimes.ToList();
+            catch (DbUpdateConcurrencyException)
+            {
+                return NotFound();
+            }
         }
-
         // GET: api/Time/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Time>> GetTime(int id)
@@ -71,8 +78,6 @@ namespace GameFantasy.Controllers
                 return BadRequest();
             }
             
-      
-
             try
             {
                 time.Id = id;
@@ -100,12 +105,27 @@ namespace GameFantasy.Controllers
         [HttpPost]
         public async Task<ActionResult<Time>> PostTime(Time time)
         {
-            
-            _context.Times.Add(time);
-            await _context.SaveChangesAsync();
-             
-            return CreatedAtAction("GetTime", new { id = time.Id }, time);
 
+           //validação de times já cadastrados
+            var valid = _context.Times.FirstOrDefault(x => x.Nome == time.Nome) == null;
+         
+            if (valid == true)
+            {
+                try
+                {
+                    _context.Times.Add(time);
+                    await _context.SaveChangesAsync();
+                    return CreatedAtAction("GetTime", new { id = time.Id }, time);
+                }
+                catch (Exception)
+                {
+                    throw new Exception();
+                }
+            }
+            else
+            {
+                return BadRequest("Time já cadastrado!"); 
+            }
         }
 
         // DELETE: api/Time/5

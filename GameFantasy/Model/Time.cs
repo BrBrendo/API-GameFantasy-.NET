@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace GameFantasyAPI.Model
 {
@@ -13,8 +10,7 @@ namespace GameFantasyAPI.Model
         public string Nome { get; set; }
         public int Pontos { get; set; }
 
-
-
+        
     }
 }
 

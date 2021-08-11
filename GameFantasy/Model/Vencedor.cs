@@ -13,7 +13,5 @@ namespace GameFantasyAPI.Model
         public string Terceiro { get; set; }
         
     }
- 
-
-     
+   
 }   

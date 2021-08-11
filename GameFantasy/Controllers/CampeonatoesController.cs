@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GameFantasyAPI.Data;
 using GameFantasyAPI.Model;
-using System.Text.Json;
-using GameFantasyAPI.View;
+
+
 
 namespace GameFantasy.Controllers
 {
@@ -25,15 +24,14 @@ namespace GameFantasy.Controllers
 
         // GET: api/Campeonatoes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ViewModel>>> GetCampeonato( )
+        public async Task<ActionResult<IEnumerable<ViewModel>>> GetCampeonato()
         {
-            
+
             // algoritimo de placar aleatorio
             int c = _context.Times.Count();
 
             for (int i = 1; i <= c; i++)
             {
-
                 for (int j = 1; j <= c; j++)
                 {
                     if (i != j)
@@ -42,56 +40,66 @@ namespace GameFantasy.Controllers
                         Time time1 = _context.Times.Find(i);
 
                         Time time2 = _context.Times.Find(j);
-
+                        //concatenar times
                         string times = time1.Nome.ToString() + " X " + time2.Nome.ToString();
                         //distribuição dos pontos da partida
                         Random randNum = new Random();
-
                         int v1 = randNum.Next(4);
                         int v2 = randNum.Next(4);
+
                         if (v1 > v2)
                         {
-                            int pt = time1.Pontos + 1;
-
-                            time1.Pontos = pt;
+                            int pt1 = time1.Pontos + 3;
+                            time1.Pontos = pt1;
                             _context.Entry(time1).State = EntityState.Modified;
                             await _context.SaveChangesAsync();
                         }
-                        else
+                        if (v1 < v2)
                         {
-                            int pt = time2.Pontos + 1;
-                            time1.Pontos = pt;
-                            _context.Entry(time1).State = EntityState.Modified;
+                            int pt2 = time2.Pontos + 3;
+                            time2.Pontos = pt2;
+                            _context.Entry(time2).State = EntityState.Modified;
                             await _context.SaveChangesAsync();
                         }
+                        if (v1 == v2)
+                        {
 
+                            int pt1 = time1.Pontos + 1;
+                            time1.Pontos = pt1;
+                            _context.Entry(time1).State = EntityState.Modified;
 
+                            int pt2 = time2.Pontos + 1;
+                            time2.Pontos = pt2;
+                            _context.Entry(time2).State = EntityState.Modified;
+                            await _context.SaveChangesAsync();
 
-                        //placar
-                        string placar = v1.ToString() +" X "+ v2.ToString();
+                        }
+
+                        //concatenar o placar
+                        string placar = v1.ToString() + " X " + v2.ToString();
                         var p = new Campeonato { Times = times, Placar = placar };
                         await _context.Campeonatos.AddAsync(p);
-                        
+
                         await _context.SaveChangesAsync();
                     }
                 }
 
             }
-            // gerar campeoes
-            string nome1="";
+            // selecionar campeoes pela query
+            string nome1 = "";
             string nome2 = "";
-            string nome3="";
+            string nome3 = "";
             int contador = 0;
-            var campQuery = 
+            var campQuery =
                 (from i in _context.Times
                  select i).OrderByDescending(x => x.Pontos).Take(3);
-          
-            foreach ( Time i in campQuery)
+
+            foreach (Time i in campQuery)
             {
                 contador++;
                 switch (contador)
-                { 
-                
+                {
+
                     case 1:
                         nome1 = i.Nome;
                         break;
@@ -103,7 +111,7 @@ namespace GameFantasy.Controllers
                         break;
 
                 }
-                
+
             }
             //persistir vencedores
             Vencedor n = new Vencedor { Campeao = nome1, Vice = nome2, Terceiro = nome3 };
@@ -115,12 +123,15 @@ namespace GameFantasy.Controllers
             ViewModel model = new ViewModel { Campeonato = a, Vencedores = b };
             await _context.ViewModels.AddAsync(model);
             await _context.SaveChangesAsync();
-
-           
-           return _context.ViewModels.ToList(); 
-        
+            try
+            {
+                return _context.ViewModels.ToList();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return NotFound();
+            }
         }
-
 
         // GET: api/Campeonatoes/5
         [HttpGet("{id}")]

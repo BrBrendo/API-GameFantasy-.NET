@@ -12,9 +12,9 @@ namespace GameFantasy.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Pagina = table.Column<int>(nullable: true),
-                    TamanhoPagina = table.Column<int>(nullable: true),
-                    QtdPagina = table.Column<int>(nullable: true)
+                    Pagina = table.Column<int>(nullable: false),
+                    TamanhoPagina = table.Column<int>(nullable: false),
+                    QtdPagina = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameFantasy.Migrations
 {
     [DbContext(typeof(CampeonatoContexto))]
-    [Migration("20210811070418_Initial")]
+    [Migration("20210811181604_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

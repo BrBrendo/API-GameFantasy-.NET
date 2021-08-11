@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using GameFantasyAPI.Model;
+﻿using GameFantasyAPI.Model;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 
 namespace GameFantasyAPI.Data
@@ -22,14 +17,7 @@ namespace GameFantasyAPI.Data
         {
 
         }
-
-    
-
-
-
     }
-
-
 }
 
 
