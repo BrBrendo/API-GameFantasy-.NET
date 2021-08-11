@@ -13,16 +13,16 @@ namespace GameFantasy.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CampeonatoesController : ControllerBase
+    public class CampeonatoController : ControllerBase
     {
         private readonly CampeonatoContexto _context;
 
-        public CampeonatoesController(CampeonatoContexto context)
+        public CampeonatoController(CampeonatoContexto context)
         {
             _context = context;
         }
 
-        // GET: api/Campeonatoes
+        // GET: api/Campeonato
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ViewModel>>> GetCampeonato()
         {
@@ -133,7 +133,7 @@ namespace GameFantasy.Controllers
             }
         }
 
-        // GET: api/Campeonatoes/5
+        // GET: api/Campeonato/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Campeonato>> GetCampeonato(int id)
         {
@@ -147,7 +147,7 @@ namespace GameFantasy.Controllers
             return campeonato;
         }
 
-        // PUT: api/Campeonatoes/5
+        // PUT: api/Campeonato/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
@@ -179,7 +179,7 @@ namespace GameFantasy.Controllers
             return NoContent();
         }
 
-        // POST: api/Campeonatoes
+        // POST: api/Campeonato
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
@@ -191,7 +191,7 @@ namespace GameFantasy.Controllers
             return CreatedAtAction("GetCampeonato", new { id = campeonato.Id }, campeonato);
         }
 
-        // DELETE: api/Campeonatoes/5
+        // DELETE: api/Campeonato/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Campeonato>> DeleteCampeonato(int id)
         {
