@@ -5,10 +5,14 @@ using System.Threading.Tasks;
 
 namespace GameFantasyAPI.Model
 {
-    public class Partida
+    public class Vencedor
     {
         public int Id { get; set; }
-        public string Times { get; set; }
-        public string Placar { get; set; }
+        public string Campeao { get; set; }
+        public string Vice { get; set; }
+        public string Terceiro { get; set; }
     }
-}
+ 
+
+     
+}   

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using GameFantasyAPI.Data;
 using GameFantasyAPI.Model;
 
+
 namespace GameFantasy.Controllers
 {
     [Route("api/[controller]")]
@@ -25,8 +26,90 @@ namespace GameFantasy.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Campeonato>>> GetCampeonatos()
         {
+            
+            // algoritimo de pontuação aleatoria
+            int c = _context.Times.Count();
+
+            for (int i = 1; i <= c; i++)
+            {
+
+                for (int j = 1; j <= c; j++)
+                {
+                    if (i != j)
+                    {
+
+                        Time time1 = _context.Times.Find(i);
+
+                        Time time2 = _context.Times.Find(j);
+
+                        string times = time1.Nome.ToString() + "x" + time2.Nome.ToString();
+                        //distribuição dos pontos da partida
+                        Random randNum = new Random();
+
+                        int v1 = randNum.Next(4);
+                        int v2 = randNum.Next(4);
+                        if (v1 > v2)
+                        {
+                            int pt = time1.Pontos + 1;
+
+                            time1.Pontos = pt;
+                            _context.Entry(time1).State = EntityState.Modified;
+                            await _context.SaveChangesAsync();
+                        }
+                        else
+                        {
+                            int pt = time2.Pontos + 1;
+                            time1.Pontos = pt;
+                            _context.Entry(time1).State = EntityState.Modified;
+                            await _context.SaveChangesAsync();
+                        }
+
+
+
+                        //placar
+                        string placar = v1.ToString() + v2.ToString();
+                        var p = new Campeonato { Times = times, Placar = placar };
+                        await _context.Campeonatos.AddAsync(p);
+                        
+                        await _context.SaveChangesAsync();
+                    }
+                }
+
+            }
+            // gerar campeoes
+            string nome1="";
+            string nome2 = "";
+            string nome3="";
+            int contador = 0;
+            var campQuery = 
+                (from i in _context.Times
+                 select i).OrderByDescending(x => x.Pontos).Take(3);
+          
+            foreach ( Time i in campQuery)
+            {
+                contador++;
+                switch (contador)
+                { 
+                
+                    case 1:
+                        nome1 = i.Nome;
+                        break;
+                    case 2:
+                        nome2 = i.Nome;
+                        break;
+                    case 3:
+                        nome3 = i.Nome;
+                        break;
+
+                }
+                
+            }
+            Vencedor n = new Vencedor { Campeao = nome1, Vice = nome2, Terceiro = nome3 };
+            await _context.Vencedores.AddAsync(n);
+            await _context.SaveChangesAsync();
             return await _context.Campeonatos.ToListAsync();
         }
+
 
         // GET: api/Campeonatoes/5
         [HttpGet("{id}")]

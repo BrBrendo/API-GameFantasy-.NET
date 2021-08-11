@@ -7,11 +7,11 @@ namespace GameFantasyAPI.Model
 {
     public class Campeonato
     {
+      
+  
         public int Id { get; set; }
-        public string Campeao { get; set; }
-        public string Vice { get; set; }
-        public string Terceiro { get; set; }
-        public List<Partida> Partidas { get; set; }
+        public string Times { get; set; }
+        public string Placar { get; set; }
 
     }
 }

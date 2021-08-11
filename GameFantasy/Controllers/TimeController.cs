@@ -50,12 +50,6 @@ namespace GameFantasy.Controllers
         {
 
 
-
-
-
-            
-         
-
             if (!TimeExists(id))
             {
                 return BadRequest();
@@ -90,10 +84,12 @@ namespace GameFantasy.Controllers
         [HttpPost]
         public async Task<ActionResult<Time>> PostTime(Time time)
         {
+            
             _context.Times.Add(time);
             await _context.SaveChangesAsync();
-
+             
             return CreatedAtAction("GetTime", new { id = time.Id }, time);
+
         }
 
         // DELETE: api/Time/5

@@ -12,9 +12,8 @@ namespace GameFantasy.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Campeao = table.Column<string>(nullable: true),
-                    Vice = table.Column<string>(nullable: true),
-                    Terceiro = table.Column<string>(nullable: true)
+                    Times = table.Column<string>(nullable: true),
+                    Placar = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -36,42 +35,31 @@ namespace GameFantasy.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Partidas",
+                name: "Vencedores",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Times = table.Column<string>(nullable: true),
-                    Placar = table.Column<string>(nullable: true),
-                    CampeonatoId = table.Column<int>(nullable: true)
+                    Campeao = table.Column<string>(nullable: true),
+                    Vice = table.Column<string>(nullable: true),
+                    Terceiro = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Partidas", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Partidas_Campeonatos_CampeonatoId",
-                        column: x => x.CampeonatoId,
-                        principalTable: "Campeonatos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                    table.PrimaryKey("PK_Vencedores", x => x.Id);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Partidas_CampeonatoId",
-                table: "Partidas",
-                column: "CampeonatoId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Partidas");
+                name: "Campeonatos");
 
             migrationBuilder.DropTable(
                 name: "Times");
 
             migrationBuilder.DropTable(
-                name: "Campeonatos");
+                name: "Vencedores");
         }
     }
 }

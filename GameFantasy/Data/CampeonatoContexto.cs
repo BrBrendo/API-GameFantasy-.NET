@@ -7,13 +7,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 
-
 namespace GameFantasyAPI.Data
 {
     public class CampeonatoContexto : DbContext
     {
         public DbSet<Time> Times { get; set; }
-        public DbSet<Partida> Partidas { get; set; }
+        public DbSet<Vencedor> Vencedores { get; set; }
         public DbSet<Campeonato> Campeonatos { get; set; }
 
         public CampeonatoContexto(DbContextOptions<CampeonatoContexto>opcoes) : base (opcoes)
@@ -21,8 +20,8 @@ namespace GameFantasyAPI.Data
 
         }
 
-        
-        
+    
+
 
 
     }
