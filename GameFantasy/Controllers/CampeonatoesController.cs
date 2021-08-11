@@ -7,7 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GameFantasyAPI.Data;
 using GameFantasyAPI.Model;
-
+using System.Text.Json;
+using GameFantasyAPI.View;
 
 namespace GameFantasy.Controllers
 {
@@ -24,10 +25,10 @@ namespace GameFantasy.Controllers
 
         // GET: api/Campeonatoes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Campeonato>>> GetCampeonatos()
+        public async Task<ActionResult<IEnumerable<ViewModel>>> GetCampeonato( )
         {
             
-            // algoritimo de pontuação aleatoria
+            // algoritimo de placar aleatorio
             int c = _context.Times.Count();
 
             for (int i = 1; i <= c; i++)
@@ -42,7 +43,7 @@ namespace GameFantasy.Controllers
 
                         Time time2 = _context.Times.Find(j);
 
-                        string times = time1.Nome.ToString() + "x" + time2.Nome.ToString();
+                        string times = time1.Nome.ToString() + " X " + time2.Nome.ToString();
                         //distribuição dos pontos da partida
                         Random randNum = new Random();
 
@@ -67,7 +68,7 @@ namespace GameFantasy.Controllers
 
 
                         //placar
-                        string placar = v1.ToString() + v2.ToString();
+                        string placar = v1.ToString() +" X "+ v2.ToString();
                         var p = new Campeonato { Times = times, Placar = placar };
                         await _context.Campeonatos.AddAsync(p);
                         
@@ -104,10 +105,20 @@ namespace GameFantasy.Controllers
                 }
                 
             }
+            //persistir vencedores
             Vencedor n = new Vencedor { Campeao = nome1, Vice = nome2, Terceiro = nome3 };
             await _context.Vencedores.AddAsync(n);
             await _context.SaveChangesAsync();
-            return await _context.Campeonatos.ToListAsync();
+            // persistir lista com vencedores e as partidas
+            var a = _context.Campeonatos.ToList();
+            var b = _context.Vencedores.ToList();
+            ViewModel model = new ViewModel { Campeonato = a, Vencedores = b };
+            await _context.ViewModels.AddAsync(model);
+            await _context.SaveChangesAsync();
+
+           
+           return _context.ViewModels.ToList(); 
+        
         }
 
 

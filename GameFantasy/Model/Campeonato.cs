@@ -12,6 +12,6 @@ namespace GameFantasyAPI.Model
         public int Id { get; set; }
         public string Times { get; set; }
         public string Placar { get; set; }
-
+       
     }
 }

@@ -23,9 +23,25 @@ namespace GameFantasy.Controllers
 
         // GET: api/Time
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Time>>> GetTimes()
+        public async Task<ActionResult<IEnumerable<PaginaTime>>> GetTimes()
         {
-            return await _context.Times.ToListAsync();
+            //paginação no get
+            int pagina = 1;
+
+            int tamanhoPagina = 10;
+            var QtdPaginas =(_context.Times.Count() / tamanhoPagina)+1;
+
+            var resultados = _context.Times
+                               .Skip((pagina - 1) * tamanhoPagina)
+                               .Take(tamanhoPagina);
+            PaginaTime result = new PaginaTime { Pagina = pagina, TamanhoPagina = tamanhoPagina, QtdPagina = QtdPaginas, Itens = resultados.ToList() };
+            var pag = _context.PaginaTimes.Find(1);
+            if (pag == null)
+            {
+                await _context.PaginaTimes.AddAsync(result);
+            }
+            await _context.SaveChangesAsync();
+            return  _context.PaginaTimes.ToList();
         }
 
         // GET: api/Time/5

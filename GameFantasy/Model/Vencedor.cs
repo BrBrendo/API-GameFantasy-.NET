@@ -11,6 +11,7 @@ namespace GameFantasyAPI.Model
         public string Campeao { get; set; }
         public string Vice { get; set; }
         public string Terceiro { get; set; }
+        
     }
  
 
